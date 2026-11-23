@@ -191,10 +191,10 @@ button,.bt,.sw,.hb{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <div id="bar"><button class="hb" id="hb" aria-label="Menu" aria-expanded="false" aria-controls="dd"><span></span><span></span><span></span></button><div id="dd"><button class="bt" id="ev">Événement ✦</button><button class="bt g" id="add">+ Souvenir</button><button class="bt" id="home">Retour</button><button class="bt g" id="pj" style="display:none">Rejoindre l’autre ♥</button><button class="bt" id="mn">Menu principal</button></div></div>
 <div id="panel"><button class="x" id="px" type="button" aria-label="Fermer">×</button><div id="pc"></div></div>
 <button class="bt g" id="ib" type="button" aria-label="Ouvrir les informations">ⓘ Infos</button>
-<div id="form"><button class="x" id="fx" type="button" aria-label="Fermer">×</button><h2>Nouveau souvenir</h2>
-<input id="mt" placeholder="Titre" maxlength="80"><input id="md" type="date"><textarea id="mx" rows="4" placeholder="Description"></textarea><input id="mf" type="file" accept="image/*">
+<div id="form"><button class="x" id="fx" type="button" aria-label="Fermer">×</button><h2 id="fh">Nouveau souvenir</h2>
+<input id="mt" placeholder="Titre" maxlength="80"><input id="md" type="date"><textarea id="mx" rows="4" placeholder="Description"></textarea><input id="mf" type="file" accept="image/*"><button class="bt" id="mrm" type="button" style="display:none;margin-top:4px">Retirer la photo actuelle</button>
 <div class="row"><button class="bt g" id="save">Placer dans l’univers</button></div>
-<div style="font-size:11px;color:var(--muted);margin-top:10px">Le souvenir apparaît devant toi, à l’endroit où tu regardes.</div></div>
+<div id="fhint" style="font-size:11px;color:var(--muted);margin-top:10px">Le souvenir apparaît devant toi, à l’endroit où tu regardes.</div></div>
 <canvas id="warp"></canvas>
 <div id="lb"></div>
 <div id="toast"></div>
@@ -375,8 +375,9 @@ function select(it){sel=it;if(chl){world.remove(chl);chl=null}if(halo)world.remo
   if(it.t!=='ev'){halo=pts([{v:it.v,c:new THREE.Color(it.t==='mem'?COL.m:0xE7EDF5),s:46}],.35,1);world.add(halo)}
   var h;if(it.t==='ev')h=evHTML(it.info);else if(it.t==='star')h=evHTML(starInfo(it));
   else{var m=it.m,d=m.date?new Date(m.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):'';
-    h='<h2 style="color:var(--gold)">'+esc(m.title)+'</h2><div class="sub">'+d+'</div>'+(m.img?'<img src="'+m.img+'">':'')+'<p>'+esc(m.desc||'').replace(/\n/g,'<br>')+'</p><button class="bt" id="del">Supprimer ce souvenir</button>'}
+    h='<h2 style="color:var(--gold)">'+esc(m.title)+'</h2><div class="sub">'+d+'</div>'+(m.img?'<img src="'+m.img+'">':'')+'<p>'+esc(m.desc||'').replace(/\n/g,'<br>')+'</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="bt g" id="edt">✎ Modifier</button><button class="bt" id="del">Supprimer ce souvenir</button></div>'}
   var wasOpen=$('panel').style.display==='block';$('pc').innerHTML=h;$('panel').style.display=wasOpen?'block':'none';$('ib').style.display=wasOpen?'none':'block';ibT=Date.now();$('pc').insertAdjacentHTML('beforeend','<div style="margin-top:12px"><button class="bt" id="go">Voyager jusqu’ici</button></div>');$('go').onclick=function(){fly(it)};
+  var ed=$('edt');if(ed)ed.onclick=function(){openForm(it.m)};
   var dl=$('del');if(dl)dl.onclick=function(){mems=mems.filter(function(x){return x.id!==it.m.id});persist();rebuild();select(null)}}
 var ibT=0;
 $('px').onclick=function(){$('panel').style.display='none';if(sel)$('ib').style.display='block';ibT=Date.now()};
@@ -415,14 +416,25 @@ hold('fast',function(){fast=!fast});hold('stop',function(){vel.set(0,0,0)});
 // Boutons
 $('home').onclick=function(){go(new THREE.Vector3(0,0,0),0,0)};
 
-$('add').onclick=function(){$('form').style.display='block'};
+var editId=null,editImg='',editKeep=true;
+function openForm(m){editId=m?m.id:null;editImg=m?(m.img||''):'';editKeep=true;
+$('fh').textContent=m?'Modifier le souvenir':'Nouveau souvenir';$('save').textContent=m?'Enregistrer les modifications':'Placer dans l’univers';
+$('mt').value=m?m.title:'';$('md').value=m?(m.date||''):'';$('mx').value=m?(m.desc||''):'';$('mf').value='';
+$('mrm').style.display=m&&editImg?'block':'none';$('fhint').style.display=m?'none':'block';$('form').style.display='block'}
+$('mrm').onclick=function(){editKeep=false;this.style.display='none';toast('La photo sera retirée à l’enregistrement')};
+$('add').onclick=function(){openForm(null)};
 var hbt=$('hb'),ddm=$('dd');function ddT(o){var on=o===undefined?!ddm.classList.contains('on'):o;ddm.classList.toggle('on',on);hbt.setAttribute('aria-expanded',on)}
 hbt.onclick=function(){ddT()};ddm.addEventListener('click',function(e){if(e.target.closest('button'))ddT(false)});
 addEventListener('pointerdown',function(e){if(!e.target.closest('#bar'))ddT(false)});addEventListener('keydown',function(e){if(e.key==='Escape')ddT(false)});
 $('fx').onclick=function(){$('form').style.display='none'};
 $('search').addEventListener('change',function(){var q=this.value.trim().toLowerCase(),o=real.concat(memItems).filter(function(x){return x.name.toLowerCase()===q})[0];if(o){select(o);fly(o);this.blur()}});
 $('save').onclick=function(){var t=$('mt').value.trim();if(!t){toast('Donne un titre à ton souvenir');return}
-  function done(img){var d=new THREE.Vector3();cam.getWorldDirection(d);var p=cam.position.clone().addScaledVector(d,40),id=Date.now();world.updateMatrixWorld(true);world.worldToLocal(p);
+  function done(img){if(editId!==null){var em=null;mems.forEach(function(x){if(x.id===editId)em=x});
+      if(!em){toast('Souvenir introuvable');return}
+      em.title=t;em.date=$('md').value;em.desc=$('mx').value;if(img)em.img=img;else if(!editKeep)em.img='';
+      var eid=editId;editId=null;persist();rebuild();mstat();$('form').style.display='none';['mt','md','mx','mf'].forEach(function(k){$(k).value=''});
+      select(memItems.filter(function(o){return o.m.id===eid})[0]||null);toast('Souvenir modifié');return}
+    var d=new THREE.Vector3();cam.getWorldDirection(d);var p=cam.position.clone().addScaledVector(d,40),id=Date.now();world.updateMatrixWorld(true);world.worldToLocal(p);
     mems.push({id:id,title:t,date:$('md').value,desc:$('mx').value,img:img,p:[p.x,p.y,p.z]});persist();rebuild();
     $('form').style.display='none';['mt','md','mx','mf'].forEach(function(k){$(k).value=''});
     select(memItems.filter(function(o){return o.m.id===id})[0])}
