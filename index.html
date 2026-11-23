@@ -10,7 +10,7 @@
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;overflow:hidden;touch-action:none}
 canvas{display:block;position:fixed;inset:0}
-#title,#search,#help,#bar,#panel,#form,#toast,#joy,.b{z-index:5}
+#title,#search,#tick,#help,#bar,#panel,#form,#toast,#joy,.b{z-index:5}
 #lb{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}
 .lb{position:absolute;font-size:11px;color:var(--muted);white-space:nowrap;transform:translate(8px,-50%);text-shadow:0 0 4px #070B16}
 .lc{color:var(--cl,var(--accent));font-family:'Space Grotesk',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-size:11px;transform:translate(-50%,-50%);opacity:.8;pointer-events:auto;cursor:pointer;padding:6px 8px}
@@ -57,10 +57,10 @@ canvas{display:block;position:fixed;inset:0}
 .b{display:none}
 .touch .b{display:flex;position:fixed;width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--text);align-items:center;justify-content:center;font-size:12px;right:18px}
 .touch #help{display:none}.touch #title{display:none}.touch #search{left:18px;transform:none;width:44vw}
-.touch .bt{padding:8px 12px}.touch #toast{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 64px)}
+.touch .bt{padding:8px 12px}.touch #toast{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 86px)}
 
 /* Menu d'accueil */
-.menu #title,.menu #search,.menu #help,.menu #bar,.menu #panel,.menu #form,.menu #toast,.menu #joy,.menu .b,.menu #lb{display:none!important}
+.menu #title,.menu #search,.menu #tick,.menu #help,.menu #bar,.menu #panel,.menu #form,.menu #toast,.menu #joy,.menu .b,.menu #lb{display:none!important}
 #menu{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 24px) 24px calc(env(safe-area-inset-bottom,0px) + 24px);box-sizing:border-box;overflow:auto;touch-action:pan-y;
 background:radial-gradient(ellipse at 50% 45%,rgba(7,11,22,.15) 0%,rgba(7,11,22,.55) 55%,rgba(7,11,22,.88) 100%);transition:opacity .9s ease,visibility .9s}
 #menu.out{opacity:0;visibility:hidden;pointer-events:none}
@@ -116,7 +116,7 @@ background:radial-gradient(ellipse at 50% 45%,rgba(7,11,22,.15) 0%,rgba(7,11,22,
 #menu .mw>*:nth-child(2){animation-delay:.1s}#menu .mw>*:nth-child(3){animation-delay:.2s}#menu .mw>*:nth-child(4){animation-delay:.32s}#menu .mw>*:nth-child(n+5){animation-delay:.45s}
 @keyframes mup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 #warp{position:fixed;inset:0;width:100%;height:100%;z-index:21;pointer-events:none;display:none}
-.hudin #title,.hudin #search,.hudin #help,.hudin #bar,.hudin .b,.hudin #joy{animation:hin 1.2s ease both}
+.hudin #title,.hudin #search,.hudin #tick,.hudin #help,.hudin #bar,.hudin .b,.hudin #joy{animation:hin 1.2s ease both}
 @keyframes hin{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){#menu,#menu .mw,#menu .mw>*,#menu .mpw,#menu .mp{animation:none;transition:none}}
 #onb{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(5,8,16,.93);backdrop-filter:blur(8px)}#onb[hidden]{display:none}
@@ -133,6 +133,16 @@ button,.bt,.sw,.hb{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 #bar{pointer-events:none}
 .hb{pointer-events:auto}
 .touch input,.touch textarea,.touch select{font-size:16px!important}
+#search{display:none}
+#tick{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);width:min(470px,46vw);min-height:42px;box-sizing:border-box;display:flex;align-items:center;gap:8px;background:rgba(13,20,36,.72);border:1px solid var(--line);border-radius:22px;padding:5px 6px 5px 14px;font-family:Inter,sans-serif;font-size:12.5px;line-height:1.35;color:var(--text);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#tv{flex:1;min-width:0;cursor:pointer;transition:opacity .38s ease;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#tv.off{opacity:0}
+#tv b{font:600 10px 'Space Grotesk',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--tc,var(--accent));margin-right:7px}
+#tk{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;font-size:13px;padding:0;line-height:1}
+#tk:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.touch #tick{left:18px;transform:none;width:calc(100vw - 100px)}
+.touch #tv{-webkit-line-clamp:3;font-size:12px}
+@media (prefers-reduced-motion:reduce){#tv{transition:none}}
 </style>
 </head>
 <body class="menu">
@@ -158,6 +168,8 @@ button,.bt,.sw,.hb{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 <div class="hint" id="sst" style="margin-top:10px">Non configurée</div>
 <button class="sw" id="or" role="switch" aria-checked="true"><span>Rotation du ciel autour du centre</span><i></i></button>
 <button class="sw" id="oe" role="switch" aria-checked="true"><span>Événements célestes automatiques</span><i></i></button>
+<button class="sw" id="og" role="switch" aria-checked="true"><span>Événements rigolos<small>OVNI, canard géant, pizza, vache…</small></span><i></i></button>
+<button class="sw" id="oi" role="switch" aria-checked="true"><span>Infos rigolotes<small>Glissées de temps en temps dans le bandeau du haut</small></span><i></i></button>
 <div class="cr"><span>Étoiles<small id="hs"></small></span><input type="color" id="cs" value="#cad7ff" aria-label="Couleur des étoiles"></div>
 <div class="cr"><span>Constellations</span><input type="color" id="cc" value="#8BBCE8" aria-label="Couleur des constellations"></div>
 <div class="cr"><span>Souvenirs</span><input type="color" id="cm" value="#D9BD91" aria-label="Couleur des souvenirs"></div>
@@ -173,8 +185,9 @@ button,.bt,.sw,.hb{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 </div>
 </div>
 <div id="title" class="hud">OUR LITTLE UNIVERSE</div>
+<div id="tick"><div id="tv" role="status"></div><button id="tk" type="button" aria-label="Rechercher une étoile" title="Rechercher une étoile (/)">🔍</button></div>
 <input id="search" list="dl" placeholder="Rechercher une étoile…" autocomplete="off"><datalist id="dl"></datalist>
-<div id="help" class="hud">Glisser : orienter · Z/W S Q/A D : bouger · E/C : monter/descendre · Shift : vite · Ctrl : précis · Espace : stop · Molette : vitesse · Clic sur une étoile puis bouton ⓘ Infos : détails<br>Positions des étoiles approximatives, noms et données réels.</div>
+<div id="help" class="hud">Glisser : orienter · Z/W S Q/A D : bouger · E/C : monter/descendre · Shift : vite · Ctrl : précis · Espace : stop · Molette : vitesse · Clic sur une étoile puis bouton ⓘ Infos : détails · / ou 🔍 : rechercher une étoile<br>Positions des étoiles approximatives, noms et données réels.</div>
 <div id="bar"><button class="hb" id="hb" aria-label="Menu" aria-expanded="false" aria-controls="dd"><span></span><span></span><span></span></button><div id="dd"><button class="bt" id="ev">Événement ✦</button><button class="bt g" id="add">+ Souvenir</button><button class="bt" id="home">Retour</button><button class="bt g" id="pj" style="display:none">Rejoindre l’autre ♥</button><button class="bt" id="mn">Menu principal</button></div></div>
 <div id="panel"><button class="x" id="px" type="button" aria-label="Fermer">×</button><div id="pc"></div></div>
 <button class="bt g" id="ib" type="button" aria-label="Ouvrir les informations">ⓘ Infos</button>
@@ -467,6 +480,7 @@ else if(e.k==='m'){e.g.position.addScaledVector(e.vel,dt);e.g.children[0].materi
 else if(e.k==='s'){evShower(e)}
 else if(e.k==='n'){novaStep(e)}
 else if(e.k==='k'){catStep(e,dt)}
+else if(e.k==='g'){gStep(e)}
 else if(e.k==='b'){v=Math.max(0,Math.min(1,e.t/5,(e.life-e.t)/5));e.g.scale.setScalar((.2+.8*v)*1.5);e.ms.forEach(function(m){m.uniforms.a.value=v;m.uniforms.tm.value=e.t});e.halo.material.uniforms.a.value=.3*v;e.bb.forEach(function(q){q.quaternion.copy(cam.quaternion)})}
 if(e.t>=e.life){e.g.traverse(function(q){if(q.geometry)q.geometry.dispose();if(q.material)q.material.dispose()});scene.remove(e.g);evs.splice(i,1)}}}
 
@@ -501,6 +515,7 @@ var SH=[
 {name:'Pluie des Quadrantides',rows:[['Corps parent','2003 EH1'],['Pic','vers le 3 janvier'],['Vitesse','≈ 41 km/s'],['Taux max.','≈ 80 par heure'],['Radiant','Bouvier']],txt:'Un pic très étroit, de quelques heures seulement.'}];
 var SHC=' Ce sont de minuscules grains, souvent de la taille d’un grain de sable, qui brûlent à 80–100 km d’altitude. Leurs trajectoires semblent jaillir d’un même point, le radiant : c’est un effet de perspective.';
 function evInfo(e){
+if(e.k==='g')return GI[e.gk]||null;
 if(e.k==='c')return{name:e.def.name,sub:e.def.des+' · comète',rows:e.def.rows,txt:e.def.txt+' Sa queue d’ions (bleue, droite) et sa queue de poussière (jaune, courbée) pointent à l’opposé du Soleil.',bonus:34,dist:45};
 if(e.k==='s')return{name:e.def.name,sub:'Pluie d’étoiles filantes',rows:e.def.rows,txt:e.def.txt+SHC,bonus:60,dist:110};
 if(e.k==='n')return{name:'Nova',sub:'Explosion d’une naine blanche',rows:[['Hausse d’éclat','8 à 15 magnitudes'],['Durée','semaines à mois'],['Découvertes','≈ 10 par an dans la Voie lactée'],['Vitesse de l’enveloppe','plusieurs milliers de km/s']],txt:'Une naine blanche arrache de l’hydrogène à son étoile compagne. Quand il s’accumule, il s’embrase brutalement à sa surface : l’étoile brille des milliers de fois plus puis s’estompe, et une enveloppe de gaz est éjectée. Contrairement à une supernova, l’étoile survit. La nova récurrente T Coronae Borealis a éclaté en 1866 et 1946. Ici le phénomène est accéléré : en réalité l’éclat grimpe en quelques heures ou jours, puis décline pendant des semaines.',bonus:40,dist:45};
@@ -614,7 +629,7 @@ function evHash(s){var h=2166136261,i;for(i=0;i<s.length;i++){h^=s.charCodeAt(i)
 function evRng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function evRoom(){return SY&&SY.on&&SY.code?SY.code:'olu'}
 function evSlot(s){var r=evRng(evHash(evRoom()+'|'+s)),o={k:EVK[Math.floor(r()*8)],off:r()*EVSL,seed:(r()*4294967296)>>>0,am:[]},n=2+Math.floor(r()*6),i;
-for(i=0;i<n;i++)o.am.push({off:r()*EVSL,seed:(r()*4294967296)>>>0});return o}
+for(i=0;i<n;i++)o.am.push({off:r()*EVSL,seed:(r()*4294967296)>>>0});if(r()<.8)o.g={k:GK[Math.floor(r()*GK.length)],off:r()*EVSL,seed:(r()*4294967296)>>>0};return o}
 function evFrame(yaw,pit){var cp=Math.cos(pit),q=world.quaternion,f=new THREE.Vector3(cp*Math.sin(yaw),Math.sin(pit),-cp*Math.cos(yaw)),
 r=new THREE.Vector3().crossVectors(f,UP2).normalize(),u=new THREE.Vector3().crossVectors(r,f);
 return{f:f.applyQuaternion(q),r:r.applyQuaternion(q),u:u.applyQuaternion(q)}}
@@ -626,8 +641,8 @@ if(y>.5)h+=', en haut';else if(y<-.5)h+=', en bas';return h}
 function evRun(sp,el){var rng=evRng(sp.seed),yaw=rng()*6.2832,pit=rng()-.3,k=sp.k,F,R0=Math.random,fr0=frame,t0=toast,g0=goofy,tx=null,n0=evs.length,e;
 if(sp.y!==undefined&&isFinite(sp.y)&&isFinite(sp.p)){yaw=+sp.y;pit=+sp.p}
 F=evFrame(yaw,pit);
-Math.random=evRng((sp.seed^0x9E3779B9)>>>0);frame=function(){return F};toast=function(t){tx=t};goofy=function(c){if(el<3)g0(c)};
-try{if(k==='c')comet();else if(k==='s')shower();else if(k==='n')nova();else if(k==='k')cat();else blackhole()}
+evEl=el;Math.random=evRng((sp.seed^0x9E3779B9)>>>0);frame=function(){return F};toast=function(t){tx=t};goofy=function(c){if(el<3)g0(c)};
+try{if(k==='c')comet();else if(k==='s')shower();else if(k==='n')nova();else if(k==='k')cat();else if(GK.indexOf(k)>=0)goofyEv(k);else blackhole()}
 finally{Math.random=R0;frame=fr0;toast=t0;goofy=g0}
 if(evs.length>n0){e=evs[evs.length-1];e.seed=sp.seed;
 if(el>0){e.t=el;if(k==='c'||k==='k')e.g.position.addScaledVector(e.vel,el);else if(k==='s')e.n=Math.floor(evShTot(el,e.life));else if(k==='n'&&el>e.t0+.3)e.fl=1}
@@ -637,18 +652,179 @@ try{o=F.r.clone().multiplyScalar(rv()).addScaledVector(F.u,rv()*.6).normalize();
 function evSched(){var n=evNow(),s0=Math.floor(n/EVSL),rm=evRoom(),s,S,key,el,i,kk;
 for(s=s0-1;s<=s0;s++){S=evSlot(s);key=rm+'|'+s;
 if(!evDone[key]){el=n-(s*EVSL+S.off);if(el>=0){evDone[key]=s;if(el<EVL[S.k])evRun({k:S.k,seed:S.seed},el)}}
-for(i=0;i<S.am.length;i++){key=rm+'|'+s+'|'+i;if(!evDone[key]){el=n-(s*EVSL+S.am[i].off);if(el>=0){evDone[key]=s;if(el<1.5)evMeteor(S.am[i].seed)}}}}
+for(i=0;i<S.am.length;i++){key=rm+'|'+s+'|'+i;if(!evDone[key]){el=n-(s*EVSL+S.am[i].off);if(el>=0){evDone[key]=s;if(el<1.5)evMeteor(S.am[i].seed)}}}
+if(S.g){key=rm+'|'+s+'|g';if(!evDone[key]){el=n-(s*EVSL+S.g.off);if(el>=0){evDone[key]=s;if(gOn&&el<EVL[S.g.k])evRun({k:S.g.k,seed:S.g.seed},el)}}}}
 for(kk in evDone)if(evDone[kk]<s0-2)delete evDone[kk]}
 function evShTot(t,L){return 3*t+14*L/Math.PI*(1-Math.cos(Math.PI*t/L))}
 function evShower(e){var tot=Math.floor(evShTot(Math.min(e.t,e.life),e.life)),R0;if(e.n===undefined)e.n=0;
 while(e.n<tot){R0=Math.random;Math.random=evRng(((e.seed||1)^Math.imul(e.n+1,2654435761))>>>0);try{shr(e)}finally{Math.random=R0}e.n++}}
 function evManual(){var w=new THREE.Vector3(),l,sp;cam.getWorldDirection(w);l=w.applyQuaternion(world.quaternion.clone().invert());
-sp={id:Math.random().toString(36).slice(2,9),k:EVK[Math.floor(Math.random()*8)],seed:(Math.random()*4294967296)>>>0,t:evNow(),y:+Math.atan2(l.x,-l.z).toFixed(4),p:+Math.asin(Math.max(-1,Math.min(1,l.y))).toFixed(4)};
+sp={id:Math.random().toString(36).slice(2,9),k:(gOn&&Math.random()<.4)?GK[Math.floor(Math.random()*GK.length)]:EVK[Math.floor(Math.random()*8)],seed:(Math.random()*4294967296)>>>0,t:evNow(),y:+Math.atan2(l.x,-l.z).toFixed(4),p:+Math.asin(Math.max(-1,Math.min(1,l.y))).toFixed(4)};
 evSeen[sp.id]=1;evPend=sp;evRun(sp,0)}
-function evRemote(x){if(!evOn||!x||typeof x.id!=='string'||x.id.length>20||evSeen[x.id])return;if(EVK.indexOf(x.k)<0||!isFinite(x.seed)||!isFinite(x.t))return;
+function evRemote(x){if(!evOn||!x||typeof x.id!=='string'||x.id.length>20||evSeen[x.id])return;if(typeof x.k!=='string'||!Object.prototype.hasOwnProperty.call(EVL,x.k)||!isFinite(x.seed)||!isFinite(x.t))return;if(GK.indexOf(x.k)>=0&&!gOn)return;
 if(Object.keys(evSeen).length>60)evSeen={};evSeen[x.id]=1;var el=evNow()-x.t;if(el<-3||el>=EVL[x.k])return;
 evRun({k:x.k,seed:x.seed>>>0,y:x.y,p:x.p},Math.max(0,el))}
 // ===== fin du ciel partagé =====
+
+// ===== Événements rigolos (activables dans Paramètres) =====
+// Même principe que le ciel partagé : calendrier déterministe, donc identiques et synchronisés pour tout le monde.
+var GK=['u','p','d','v','z','a'],gOn=true,evEl=0,gTex={};
+try{if(localStorage.getItem('olu-goofy')==='0')gOn=false}catch(e){}
+EVL.u=18;EVL.p=22;EVL.d=20;EVL.v=14;EVL.z=16;EVL.a=14;
+var GD={
+u:{ch:'🛸',sz:64,sp:22,say:['Je cherche une place de parking','On est bientôt arrivés ?','Gérard, t’as pris le GPS ?','Bip bip bip']},
+p:{ch:'🍕',sz:60,sp:12,tl:0xFFC94A,say:['Livraison en retard !','Une part ?','Quatre fromages !','Sans ananas, promis']},
+d:{ch:'🦆',sz:72,sp:2.5,say:['Coin-coin','Coin ?','Qui a vidé le bain ?','Je suis un canard, pas un vaisseau']},
+v:{ch:'🐄',sz:66,sp:26,mo:1,say:['Meuh !','Direction la Lune','Vache, c’est haut !']},
+z:{ch:'🧦',sz:56,sp:20,say:['Enfin libre !','Je cherche mon jumeau','Elle était où, la machine ?']},
+a:{ch:'👽',sz:68,sp:0,say:['Coucou !','Vous avez vu mes clés ?','Je viens en paix','Où est la sortie ?']}};
+var GT={u:'Un OVNI cherche une place de parking',p:'Une pizza orbite dans le ciel',d:'Un canard géant flotte dans l’espace',v:'Une vache saute par-dessus la Lune',z:'Une chaussette perdue traverse la galaxie',a:'Un extraterrestre vous fait coucou'};
+var GI={
+u:{name:'OVNI (Objet Vraiment Naïf et Indécis)',sub:'Soucoupe volante · très perdue',rows:[['Pilote','Gérard, 3 000 ans'],['Vitesse','2 allers-retours à la boulangerie par seconde'],['Carburant','jus de chaussette'],['Mission','trouver une place de parking']],txt:'Il tourne autour des étoiles depuis des heures. Les spécialistes pensent qu’il a oublié où il avait garé son vaisseau-mère.',note:'Événement 100 % inventé, 100 % sérieux.',bonus:40,dist:90},
+p:{name:'Pizza orbitale',sub:'Objet comestible non identifié',rows:[['Garniture','quatre fromages, zéro ananas'],['Orbite','une part par révolution'],['Livraison','30 minutes ou c’est gratuit'],['Distance','4,2 années-lumière du client']],txt:'Une traînée de fromage fondu s’étire derrière elle. Les astronomes recommandent de la regarder à l’œil nu, et de ne surtout pas la toucher : elle est brûlante.',note:'Événement 100 % inventé, 100 % sérieux.',bonus:40,dist:90},
+d:{name:'Canard de bain géant',sub:'Objet flottant non identifié',rows:[['Envergure','≈ 3 baignoires'],['Cri','coin-coin (en ultrasons)'],['Alimentation','pain rassis cosmique'],['Boussole','toujours vers la mare la plus proche']],txt:'Il flotte dans le vide sans se poser de questions. Personne ne sait comment il a quitté la salle de bain, mais il a l’air très content.',note:'Événement 100 % inventé, 100 % sérieux.',bonus:40,dist:90},
+v:{name:'La vache lunaire',sub:'Bovin en orbite basse',rows:[['Exploit','saut par-dessus la Lune'],['Hauteur','≈ 384 400 km (à peu près)'],['Réception','difficile, mais en douceur'],['Production','lait étoilé']],txt:'Selon la comptine, le chat joue du violon et la vache saute par-dessus la Lune. Ici, on a juste la vache, et elle est très motivée.',note:'Événement 100 % inventé, 100 % sérieux.',bonus:40,dist:90},
+z:{name:'La chaussette perdue',sub:'Objet textile en chute libre',rows:[['Origine','machine à laver, 2019'],['Jumelle','introuvable'],['Rotation','3,4 tours par seconde'],['État','légèrement humide']],txt:'Ça explique enfin où disparaissent les chaussettes : elles s’échappent vers la galaxie. Elle tourne sur elle-même en cherchant son jumeau.',note:'Événement 100 % inventé, 100 % sérieux.',bonus:40,dist:90},
+a:{name:'Extraterrestre sympa',sub:'Visiteur de passage',rows:[['Origine','planète Zorglub, secteur 7'],['Langue','coucou, bonjour, pardon'],['Intentions','pacifiques, mais un peu perdu'],['Passe-temps','faire des signes']],txt:'Il vous fait coucou depuis l’autre bout de la galaxie. Répondre par un signe de la main est recommandé, même si vous n’avez aucune chance d’être vu.',note:'Événement 100 % inventé, 100 % sérieux.',bonus:40,dist:90}};
+function gEmo(ch){if(gTex[ch])return gTex[ch];var c=document.createElement('canvas'),x;c.width=c.height=128;x=c.getContext('2d');
+x.font='92px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(ch,64,70);return gTex[ch]=new THREE.CanvasTexture(c)}
+function gBub(t){var k='b'+t;if(gTex[k])return gTex[k];var c=document.createElement('canvas'),x,px=34;c.width=400;c.height=110;x=c.getContext('2d');
+x.font='bold '+px+'px "Space Grotesk",sans-serif';while(x.measureText(t).width>360&&px>14){px-=2;x.font='bold '+px+'px "Space Grotesk",sans-serif'}
+x.fillStyle='rgba(255,255,255,.96)';x.beginPath();x.moveTo(30,6);x.arcTo(394,6,394,80,24);x.arcTo(394,80,30,80,24);x.arcTo(6,80,6,6,24);x.arcTo(6,6,394,6,24);x.closePath();x.fill();
+x.beginPath();x.moveTo(190,78);x.lineTo(210,78);x.lineTo(200,104);x.closePath();x.fill();
+x.fillStyle='#10131f';x.textAlign='center';x.textBaseline='middle';x.fillText(t,200,44);return gTex[k]=new THREE.CanvasTexture(c)}
+function gSnd(k){var c=AC;if(!c||!sndOn||evEl>=3||c.state!=='running')return;try{musDuck(6)}catch(e){}
+var T=c.currentTime+.05,m=c.createGain(),i;m.gain.value=.12;m.connect(c.destination);
+function N(f1,f2,t,d,ty,v,lp){var o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();o.type=ty;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+d);
+f.type='lowpass';f.frequency.value=lp||3000;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(f);f.connect(g);g.connect(m);o.start(t);o.stop(t+d+.05)}
+if(k==='d'){N(520,300,T,.14,'sawtooth',.5,1800);N(540,280,T+.2,.14,'sawtooth',.5,1800);N(500,300,T+1.5,.14,'sawtooth',.4,1800);N(520,290,T+1.7,.14,'sawtooth',.4,1800)}
+else if(k==='u'){for(i=0;i<6;i++)N(500+(i%2)*400,520+(i%2)*380,T+i*.16,.14,'sine',.5)}
+else if(k==='p'){[392,494,587,784,587,784].forEach(function(f,j){N(f,f*1.002,T+j*.17,.2,'triangle',.5)})}
+else if(k==='v'){N(150,95,T,.9,'sawtooth',.6,500)}
+else if(k==='z'){N(300,900,T,.12,'square',.25,2500);N(900,200,T+.14,.1,'square',.2,2500)}
+else if(k==='a'){[587,659,523,262,392].forEach(function(f,j){N(f,f*1.002,T+j*.28,.35,'sine',.5)})}}
+function goofyEv(k){var D=GD[k],F=frame(),sd=Math.random()<.5?-1:1,g=new THREE.Group(),
+vel=F.r.clone().multiplyScalar(sd).addScaledVector(F.u,rv()*.2).normalize().multiplyScalar(D.sp),
+sp=new THREE.Sprite(new THREE.SpriteMaterial({map:gEmo(D.ch),transparent:true,depthWrite:false,opacity:0})),
+bb=new THREE.Sprite(new THREE.SpriteMaterial({map:gBub(D.say[Math.floor(Math.random()*D.say.length)]),transparent:true,depthWrite:false,opacity:0})),tl=null,mo=null;
+sp.scale.set(D.sz,D.sz,1);bb.scale.set(96,26.4,1);g.add(sp,bb);
+if(D.tl){tl=tail(70,26,9,D.tl,vel.clone().normalize());g.add(tl)}
+if(D.mo){mo=new THREE.Sprite(new THREE.SpriteMaterial({map:gEmo('🌙'),transparent:true,depthWrite:false,opacity:0}));mo.scale.set(84,84,1);mo.position.copy(F.u).multiplyScalar(-30);g.add(mo)}
+g.position.copy(cam.position).addScaledVector(F.f,230+Math.random()*30).addScaledVector(F.r,rv()*50).addScaledVector(F.u,rv()*35);
+addEv({k:'g',gk:k,life:EVL[k],sp:sp,bb:bb,tl:tl,mo:mo,vel:vel,sd:sd,F:F,sz:D.sz},g);gSnd(k);toast(GT[k])}
+function gStep(e){var t=e.t,L=e.life,f=Math.max(0,Math.min(1,t/1.2,(L-t)/1.2)),k=e.gk,F=e.F,s=e.sz,p=e.sp.position,u=t-L/2,w;
+p.set(0,0,0);if(e.vel.lengthSq()>0)p.addScaledVector(e.vel,u);
+if(k==='u'){p.addScaledVector(F.u,Math.sin(t*2.6)*10);e.sp.material.rotation=Math.sin(t*5)*.22}
+else if(k==='p'){e.sp.material.rotation=t*.9;w=s*(1+.05*Math.sin(t*4));e.sp.scale.set(w,w,1)}
+else if(k==='d'){p.addScaledVector(F.u,Math.sin(t*1.7)*6);e.sp.material.rotation=Math.sin(t*1.3)*.25}
+else if(k==='v'){w=2*t/L-1;p.addScaledVector(F.u,60*(1-w*w)-25);e.sp.material.rotation=-t*.7*e.sd}
+else if(k==='z'){e.sp.material.rotation=t*3.4;w=Math.abs(Math.cos(t*2.2));e.sp.scale.set(s*(.35+.65*w),s,1)}
+else if(k==='a'){w=Math.min(1,t/.8);w=1-Math.pow(1-w,3)*Math.cos(w*9);e.sp.scale.set(s*w,s*w,1);e.sp.material.rotation=Math.sin(t*5)*.18;p.addScaledVector(F.u,Math.sin(t*1.5)*4)}
+e.sp.material.opacity=f;
+e.bb.position.copy(p);e.bb.position.y+=s*.82;e.bb.material.opacity=Math.max(0,Math.min(f,(t-1.2)/.5,(L-t-.8)/.5));
+if(e.tl){e.tl.position.copy(p);e.tl.material.uniforms.a.value=f*.85}
+if(e.mo)e.mo.material.opacity=f*.9}
+// ===== fin des événements rigolos =====
+
+// ===== Bandeau du ciel : actus et infos sur ce qui est visible aujourd’hui (remplace la barre de recherche) =====
+var gI=true,tkQ=[],tkI=0,tkCur=null,tkT=0,tkHold=false;
+try{if(localStorage.getItem('olu-goofyinfo')==='0')gI=false}catch(e){}
+// Actus : [date, texte, lien de l’article, source]. Elles disparaissent d’elles-mêmes au bout de 40 jours.
+var TKN=[['2026-11-11','Deux trous noirs supermassifs, en plein festin, sont repérés à 18 100 années-lumière l’un de l’autre, 900 millions d’années après le Big Bang.','https://www.sci.news/astronomy/record-breaking-quasar-pair-early-universe-15191.html','Sci.News'],
+['2026-11-09','NASA lance le Moon Base Challenge : 1 million de dollars de prix pour des équipes d’étudiants américains qui imaginent la future base lunaire.','https://www.nasa.gov/news-release/nasa-announces-1-million-to-students-for-moon-base-challenge/','NASA'],
+['2026-11-09','La sonde Hera s’approche de l’astéroïde frappé par la mission DART.','https://astronomynow.com/2026/11/09/hera-closes-in-on-the-asteroid-dart-impacted/','Astronomy Now'],
+['2026-11-06','Novembre dans le ciel : Taurides, Léonides, duo Mars-Jupiter et une supermoon le 24, première d’une série de trois.','https://science.nasa.gov/solar-system/skywatching/whats-up-november-2026-skywatching-tips-from-nasa/','NASA']];
+var TKM=[['Quadrantides',1,3,'3 janvier',80],['Lyrides',4,22,'22 avril',18],['Êta Aquarides',5,6,'6 mai',50],['Perséides',8,12,'12 août',100],['Orionides',10,21,'21 octobre',20],['Taurides',11,5,'5 novembre',5],['Léonides',11,17,'17 novembre',15],['Géminides',12,14,'14 décembre',120],['Ursides',12,22,'22 décembre',10]];
+// Ciel profond : [nom, ascension droite (h), déclinaison (°), distance, phrase, étiquette]
+var TKD=[['Galaxie d’Andromède (M31)',.712,41.27,'2,5 millions d’al','La plus lointaine visible à l’œil nu, sous un ciel noir.','Galaxie'],
+['Galaxie du Triangle (M33)',1.564,30.66,'2,7 millions d’al','Très étalée : il lui faut un ciel noir ou des jumelles.','Galaxie'],
+['Galaxie de Bode (M81)',9.926,69.07,'12 millions d’al','Une belle spirale de la Grande Ourse, aux jumelles.','Galaxie'],
+['Galaxie du Tourbillon (M51)',13.498,47.2,'23 millions d’al','La première spirale reconnue comme telle, en 1845.','Galaxie'],
+['Grand Nuage de Magellan',5.39,-69.75,'160 000 al','Une galaxie satellite de la nôtre, visible dans l’hémisphère sud.','Galaxie'],
+['Nébuleuse d’Orion (M42)',5.588,-5.39,'1 344 al','Une pouponnière d’étoiles, visible à l’œil nu.','Nébuleuse'],
+['Les Pléiades (M45)',3.79,24.12,'444 al','Un amas de jeunes étoiles bleues, nées il y a ~100 millions d’années.','Amas']];
+var TKG=['Sur Vénus, un jour dure plus longtemps qu’une année. Impossible d’être en retard : l’année est déjà finie.',
+'Une cuillère à café d’étoile à neutrons pèse environ un milliard de tonnes. Ne la laissez pas traîner dans l’évier.',
+'Les astronautes grandissent de quelques centimètres dans l’espace. Au retour, le pantalon est trop court.',
+'Il y a plus d’étoiles dans l’univers que de grains de sable sur Terre. Et pas une seule serviette de plage.',
+'Un nuage près du centre de la galaxie contient la molécule qui donne leur goût aux framboises. Le dessert existe, la table non.',
+'Le Soleil perd environ 4 millions de tonnes par seconde. Il fait un régime, et ça se voit.',
+'Neptune vient de fêter son premier anniversaire depuis sa découverte : 165 ans de fête.',
+'Félicette, une chatte française, est allée dans l’espace en 1963 et en est revenue. Elle n’a jamais voulu raconter le voyage.',
+'Un jour sur Jupiter dure moins de 10 heures. Impossible d’y faire une grasse matinée.',
+'L’univers a environ 13,8 milliards d’années. À cet âge-là, on a le droit d’avoir des courbatures.',
+'Dans l’espace, personne ne vous entend crier. Par contre, tout le monde voit la chaussette qui flotte.',
+'En voiture à 100 km/h, il faudrait plus de 170 ans pour aller au Soleil, et le GPS dirait « recalcul » tout du long.',
+'Un trou noir n’aspire pas comme un aspirateur : il ne prend que ce qui passe trop près. Comme le frigo à minuit.',
+'Les étoiles ne scintillent pas vraiment : c’est l’atmosphère qui les secoue. Elles, elles gardent leur calme.',
+'Si Betelgeuse remplaçait le Soleil, elle avalerait Mars et ferait une bouchée de la Terre. Elle ne laisse pas de miettes.',
+'Les traces de pas sur la Lune y resteront des millions d’années, faute de vent pour les effacer.',
+'Sur la Lune, on pèse six fois moins lourd. Excellent régime, mais sans les croissants.',
+'Une année-lumière, c’est environ 9 460 milliards de km : le trajet le plus long pour aller chercher du pain.',
+'Saturne est moins dense que l’eau : avec une baignoire assez grande, elle flotterait. Bain de lune non fourni.',
+'L’étoile Polaire n’est pas la plus brillante du ciel, mais elle ne bouge presque pas. Un modèle de ponctualité.',
+'Mercure est la plus proche du Soleil mais pas la plus chaude : Vénus a l’effet de serre. Mercure a juste pris un coup de soleil.',
+'La Voie lactée et Andromède se rapprochent l’une de l’autre. Rendez-vous dans quelques milliards d’années : ne soyez pas en retard.',
+'Certains télescopes voient des galaxies si lointaines qu’on les observe telles qu’elles étaient avant l’invention du petit-déjeuner.',
+'Pluton a été rétrogradée en 2006. Elle dit qu’elle n’en veut à personne et qu’elle garde ses cinq lunes.',
+'Le Soleil pèse 99,86 % de la masse du Système solaire. Les planètes se partagent les miettes du gâteau.',
+'Un trou noir de la taille d’un pois aurait la masse de la Terre. Prière de ne pas le mettre dans la soupe.',
+'Une pizza orbite peut-être au-dessus de vos têtes. Les astronomes l’ont signalée, le livreur aussi.',
+'La lumière du Soleil met 8 minutes à nous parvenir. Elle n’est jamais en avance, mais elle est très régulière.'];
+function tkShuf(a){a=a.slice();for(var i=a.length-1,j,t;i>0;i--){j=Math.floor(Math.random()*(i+1));t=a[i];a[i]=a[j];a[j]=t}return a}
+function tkFmt(n){return Number(n).toLocaleString('fr-FR')}
+function tkSky(){var n=new Date(),h=n.getHours(),night=h>=19||h<6,t=new Date(n.getTime()),lat=46,tz='',D,gm,lon;
+if(!night)t.setHours(22,0,0,0);
+try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}
+if(/^(Australia|Pacific\/(Auckland|Fiji)|America\/(Argentina|Santiago|Sao_Paulo|Montevideo|Lima|La_Paz|Asuncion)|Africa\/(Johannesburg|Maputo|Harare|Windhoek)|Indian\/(Mauritius|Reunion|Antananarivo))/.test(tz))lat=-33;
+lon=-Math.max(new Date(n.getFullYear(),0,1).getTimezoneOffset(),new Date(n.getFullYear(),6,1).getTimezoneOffset())/4;
+D=t.getTime()/86400000+2440587.5-2451545;gm=((18.697374558+24.06570982441908*D)%24+24)%24;
+return{lat:lat,lst:(gm+lon/15+24)%24,night:night}}
+function tkPos(sk,ra,dec){var H=(sk.lst-ra)*15*Math.PI/180,la=sk.lat*Math.PI/180,d=dec*Math.PI/180,
+alt=Math.asin(Math.sin(la)*Math.sin(d)+Math.cos(la)*Math.cos(d)*Math.cos(H)),
+az=Math.atan2(-Math.cos(d)*Math.sin(H),Math.sin(d)*Math.cos(la)-Math.cos(d)*Math.sin(la)*Math.cos(H));
+return{alt:alt*180/Math.PI,az:(az*180/Math.PI+360)%360}}
+var TKC=['au nord','au nord-est','à l’est','au sud-est','au sud','au sud-ouest','à l’ouest','au nord-ouest'];
+function tkWhere(p){return(p.alt<35?'bas sur l’horizon':(p.alt<65?'à mi-hauteur':'très haut dans le ciel'))+', '+TKC[Math.round(p.az/45)%8]}
+function tkMoon(){var syn=29.530588853,d=Date.now(),ph=(((d-Date.UTC(2000,0,6,18,14))/86400000)%syn+syn)%syn,fr=ph/syn,ill=Math.round((1-Math.cos(2*Math.PI*fr))/2*100),
+nm=(fr<.03||fr>.97)?'Nouvelle Lune':fr<.22?'Premier croissant':fr<.28?'Premier quartier':fr<.47?'Lune gibbeuse croissante':fr<.53?'Pleine Lune':fr<.72?'Lune gibbeuse décroissante':fr<.78?'Dernier quartier':'Dernier croissant',
+dn=((.5-fr)+1)%1*syn,dt=new Date(d+dn*86400000),tx=nm+', éclairée à ~'+ill+' %.';
+if(ill<97&&dn>.6)tx+=' Prochaine Pleine Lune vers le '+dt.toLocaleDateString('fr-FR',{day:'numeric',month:'long'})+'.';
+else if(fr>=.47&&fr<=.53)tx+=' Idéale pour les promenades, moins pour voir les étoiles faibles.';
+return{k:'Lune',c:'#E8E1C8',t:tx}}
+function tkShower(){var n=new Date(),t0=new Date(n.getFullYear(),n.getMonth(),n.getDate()),best=null,i,y,df;
+for(i=0;i<TKM.length;i++)for(y=n.getFullYear();y<=n.getFullYear()+1;y++){df=Math.round((new Date(y,TKM[i][1]-1,TKM[i][2])-t0)/86400000);if(df>=-1&&(!best||df<best.df))best={m:TKM[i],df:df}}
+var m=best.m,tx=m[0]+' : '+(best.df===0?'pic aujourd’hui':best.df===-1?'pic hier, il reste quelques météores':'pic le '+m[3]+' (dans '+best.df+' jour'+(best.df>1?'s':'')+')')+', jusqu’à ~'+m[4]+' météores par heure.';
+return{k:'Étoiles filantes',c:'#9FD8C4',t:tx}}
+function tkBuild(){var sk=tkSky(),when=sk.night?'en ce moment':'ce soir',A=[],G=[],Q=[],pool=[],yr=new Date().getFullYear(),n=Date.now(),i,c;
+real.forEach(function(r){if(r.mag<2.6){var p=tkPos(sk,r.ra,r.dec);if(p.alt>22)pool.push({r:r,p:p})}});
+tkShuf(pool).slice(0,4).forEach(function(q){var r=q.r,tx=Math.random()<.5?r.name+' ('+r.con+') est visible '+when+', '+tkWhere(q.p)+'.':
+'La lumière '+(/^[AEIOUYHÉÈÎ]/.test(r.name)?'d’':'de ')+r.name+' que tu vois '+when+' est partie '+(r.ly<yr?'vers l’an '+(yr-Math.round(r.ly)):'il y a environ '+tkFmt(r.ly)+' ans')+'.';
+A.push({k:'Étoile',c:'#8BBCE8',t:tx,o:r})});
+tkShuf(TKD).filter(function(d){return tkPos(sk,d[1],d[2]).alt>20}).slice(0,2).forEach(function(d){A.push({k:d[5],c:'#C9A7F0',t:d[0]+' · '+d[3]+'. '+d[4]+' À chercher '+when+', '+tkWhere(tkPos(sk,d[1],d[2]))+'.'})});
+A.push(tkMoon());A.push(tkShower());
+TKN.forEach(function(x){if((n-Date.parse(x[0]))/86400000<=40)A.push({k:'Actu · '+new Date(x[0]).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})+' ↗',c:'#FF9E7A',t:x[1]+' ('+x[3]+')',u:x[2],s:x[3]})});
+A=tkShuf(A);
+if(!gI)return A;
+G=tkShuf(TKG);c=0;
+for(i=0;i<A.length;i++){Q.push(A[i]);if((i+1)%(2+(i&1))===0&&G.length)Q.push({k:'Goofy',c:'#D9BD91',t:G[c++%G.length]})}
+if(G.length&&Q[Q.length-1].k!=='Goofy')Q.push({k:'Goofy',c:'#D9BD91',t:G[c++%G.length]});
+return Q}
+function tkShow(){var it,el=$('tv'),rm=(typeof reduce!=='undefined'&&reduce);if(tkI>=tkQ.length){tkQ=tkBuild();tkI=0}it=tkQ[tkI++];tkCur=it;
+el.classList.add('off');setTimeout(function(){el.innerHTML='<b style="--tc:'+it.c+'">'+esc(it.k)+'</b>'+esc(it.t);el.title=it.u?'Cliquer pour lire l’article ('+it.s+')':(it.o?'Cliquer pour s’y rendre':'Cliquer pour passer à la suite');el.classList.remove('off')},rm?0:380);
+clearTimeout(tkT);tkT=setTimeout(tkNext,Math.max(7000,3500+it.t.length*60))}
+function tkNext(){clearTimeout(tkT);if(tkHold||document.hidden){tkT=setTimeout(tkNext,1500);return}tkShow()}
+$('tv').onclick=function(){var it=tkCur;if(it&&it.u&&it.u.indexOf('https://')===0){window.open(it.u,'_blank','noopener,noreferrer')}else if(it&&it.o){select(it.o);fly(it.o)}else tkNext()};
+$('tick').addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')tkHold=true});$('tick').addEventListener('pointerleave',function(){tkHold=false});
+function tkSearch(on){$('tick').style.display=on?'none':'';$('search').style.display=on?'block':'none';if(on)$('search').focus();else $('search').value=''}
+$('tk').onclick=function(){tkSearch(true)};
+$('search').addEventListener('blur',function(){setTimeout(function(){tkSearch(false)},200)});
+$('search').addEventListener('keydown',function(e){if(e.key==='Escape'){e.stopPropagation();this.blur()}});
+addEventListener('keydown',function(e){if(e.key==='/'&&!menuOn&&!/INPUT|TEXTAREA|SELECT/.test((document.activeElement||{}).tagName||'')){e.preventDefault();tkSearch(true)}});
+tkShow();
+// ===== fin du bandeau du ciel =====
+
+
 
 
 // Constellations cliquables : [nom latin, étoile principale, visibilité, à voir, texte]
@@ -781,9 +957,9 @@ return'<details><summary>'+esc(k)+' <small>'+esc(CI[k][0])+' · '+esc(CI[k][2])+
 function goTo(f){endWarp();var it=f();fly(it)}
 sx.onclick=function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.s)goTo(function(){var o=by[b.dataset.s];select(o);return o});else if(b.dataset.c)goTo(function(){return conSel(b.dataset.c)})};
 $('ixs').oninput=function(){var q=this.value.trim().toLowerCase();sx.querySelectorAll('details').forEach(function(d){var t=d.textContent.toLowerCase(),ok=!q||t.indexOf(q)>-1;d.style.display=ok?'':'none';d.open=!!q&&ok})};
-function swSync(){$('oc').setAttribute('aria-checked',cl.visible);$('oe').setAttribute('aria-checked',evOn);$('os').setAttribute('aria-checked',sndOn);$('or').setAttribute('aria-checked',rotOn);$('om').setAttribute('aria-checked',musOn)}
+function swSync(){$('oc').setAttribute('aria-checked',cl.visible);$('oe').setAttribute('aria-checked',evOn);$('og').setAttribute('aria-checked',gOn);$('oi').setAttribute('aria-checked',gI);$('os').setAttribute('aria-checked',sndOn);$('or').setAttribute('aria-checked',rotOn);$('om').setAttribute('aria-checked',musOn)}
 $('oc').onclick=function(){cl.visible=!cl.visible;swSync()};
-$('oe').onclick=function(){evOn=!evOn;swSync()};$('os').onclick=function(){sndOn=!sndOn;swSync()};$('om').onclick=function(){musOn=!musOn;try{localStorage.setItem('olu-musique',musOn?'1':'0')}catch(e){}if(musOn){aud();musStart()}else musStop();swSync()};
+$('oe').onclick=function(){evOn=!evOn;swSync()};$('oi').onclick=function(){gI=!gI;try{localStorage.setItem('olu-goofyinfo',gI?'1':'0')}catch(e){}tkQ=[];tkI=0;clearTimeout(tkT);tkShow();swSync()};$('og').onclick=function(){gOn=!gOn;try{localStorage.setItem('olu-goofy',gOn?'1':'0')}catch(e){}if(!gOn)evs.forEach(function(e){if(e.k==='g')e.t=e.life});swSync()};$('os').onclick=function(){sndOn=!sndOn;swSync()};$('om').onclick=function(){musOn=!musOn;try{localStorage.setItem('olu-musique',musOn?'1':'0')}catch(e){}if(musOn){aud();musStart()}else musStop();swSync()};
 // Synchronisation manuelle des souvenirs : export / import d’un fichier, fusion par identifiant
 $('sx').onclick=function(){if(!mems.length){toast('Aucun souvenir à envoyer');return}
 var f=new File([JSON.stringify({olu:1,souvenirs:mems})],'souvenirs-olu.json',{type:'application/json'});
