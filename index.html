@@ -351,9 +351,14 @@ function place(L,show){var v=new THREE.Vector3();L.forEach(function(q){v.copy(q[
 
 // Souvenirs
 var mems=[],memObj=null,storyObj=null,memItems=[],halo=null,sel=null;
-try{mems=JSON.parse(localStorage.getItem('olu-souvenirs')||'[]')}catch(e){}
+// Souvenirs privés : chaque code a ses propres souvenirs sur l’appareil (le serveur les sépare déjà par salle)
+var memCode='';try{var sy0=JSON.parse(localStorage.getItem('olu-sync')||'null');if(sy0&&sy0.on&&typeof sy0.code==='string')memCode=sy0.code}catch(e){}
+function memKey(){return memCode?'olu-souvenirs-'+memCode:'olu-souvenirs'}
+function memLoad(){var a=[];try{a=JSON.parse(localStorage.getItem(memKey())||'[]')}catch(e){}return Array.isArray(a)?a:[]}
+mems=memLoad();
+function memSwitch(c){c=c||'';if(c===memCode)return;memCode=c;mems=memLoad();select(null);rebuild();mstat()}
 function toast(t){var e=$('toast');e.textContent=t;e.style.display='block';setTimeout(function(){e.style.display='none'},2600)}
-function persist(){try{localStorage.setItem('olu-souvenirs',JSON.stringify(mems))}catch(e){toast('Stockage du navigateur plein : image trop lourde')}if(typeof syPush==='function')syPush()}
+function persist(){try{localStorage.setItem(memKey(),JSON.stringify(mems))}catch(e){toast('Stockage du navigateur plein : image trop lourde')}if(typeof syPush==='function')syPush()}
 function rebuild(){
   if(memObj){world.remove(memObj);memObj.geometry.dispose()}if(storyObj){world.remove(storyObj);storyObj.geometry.dispose()}
   memItems=mems.map(function(m){return{t:'mem',rot:1,m:m,name:m.title,v:new THREE.Vector3(m.p[0],m.p[1],m.p[2]),c:new THREE.Color(COL.m),s:24}});
@@ -991,7 +996,7 @@ try{j.items.forEach(function(it){if(it.updated>syCur)syCur=it.updated;var id=Str
 if(it.deleted){if(i<mems.length){mems.splice(i,1);ch=true}delete syRem[id];return}
 if(syRem[id]===it.data&&i<mems.length)return;var m;try{m=JSON.parse(it.data)}catch(e){return}if(!syOk(m))return;
 syRem[id]=JSON.stringify(m);if(i<mems.length)mems[i]=m;else mems.push(m);ch=true});
-if(ch){try{localStorage.setItem('olu-souvenirs',JSON.stringify(mems))}catch(e){}rebuild();mstat();if(sel&&sel.t==='mem'&&!mems.some(function(m){return m.id===sel.m.id}))select(null)}}
+if(ch){try{localStorage.setItem(memKey(),JSON.stringify(mems))}catch(e){}rebuild();mstat();if(sel&&sel.t==='mem'&&!mems.some(function(m){return m.id===sel.m.id}))select(null)}}
 finally{syApplying=false}
 if(j.items.length>=200)return syGet();
 syStatus('Connecté ✓ — synchronisé en direct');
@@ -1002,10 +1007,10 @@ syGet().catch(function(e){if(g!==syGen)return;if(syFail){var f=syFail;syFail=nul
 .then(function(){syBusy=false;if(g===syGen&&syOn)syT=setTimeout(function(){syTick(g)},document.hidden?15000:3000)})}
 function syStop(){syGen++;clearTimeout(syT);syBusy=false;syOn=false;syRem={};syUI()}
 function syStart(ok,fail){syStop();if(!sbOk()){syStatus('Supabase non configuré : renseigne SB_URL et SB_KEY dans le fichier');if(fail)fail(new Error('cfg'));return}
-syOn=true;syCur=0;syReady=ok||null;syFail=fail||null;syUI();syStatus('Connexion…');syTick(syGen)}
+memSwitch(SY.code);syOn=true;syCur=0;syReady=ok||null;syFail=fail||null;syUI();syStatus('Connexion…');syTick(syGen)}
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&syOn){clearTimeout(syT);syTick(syGen)}});
 function syCode(v){v=String(v||'').trim();return v.length>=4&&v.length<=80?v:null}
-$('sys').onclick=function(){syStop();SY.on=false;sySave();syStatus('Synchronisation arrêtée')};
+$('sys').onclick=function(){syStop();SY.on=false;sySave();memSwitch('');syStatus('Synchronisation arrêtée')};
 $('syg').onclick=function(){var c=syCode($('syc').value);if(!c){syStatus('Le code doit faire au moins 4 caractères');return}SY={code:c,on:true};sySave();syStart()};
 $('syc').value=SY.code||'';
 // Présence : voir l’autre explorateur bouger en direct (position envoyée toutes les 0,8 s, mouvement lissé)
