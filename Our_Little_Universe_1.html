@@ -707,7 +707,7 @@ L.forEach(function(m){if(m&&m.id&&m.title&&Array.isArray(m.p)&&m.p.length===3&&m
 persist();rebuild();mstat();toast(n?n+' souvenir'+(n>1?'s':'')+' ajouté'+(n>1?'s':''):'Rien de nouveau : tout est déjà là')}catch(e){toast('Fichier non reconnu')}inp.value=''};rd.readAsText(r)};
 // Synchronisation en direct des souvenirs : Supabase (fonctions SQL appelées par l’API REST, interrogation toutes les 3 s)
 // → Renseigne l’adresse et la clé publique (« anon » ou « publishable ») de ton projet : Supabase → Project Settings → API
-var SB_URL='https://VOTRE-PROJET.supabase.co',SB_KEY='VOTRE_CLE_PUBLIQUE';
+var SB_URL='https://fuyydhjwgvuqlbyrcfjs.supabase.co',SB_KEY='sb_publishable_CJI4gCFvlCfpP9tRB7Zhog_BZIx33aR';
 var SY={code:'',on:false},syRem={},syApplying=false,syOn=false,syCur=0,syGen=0,syT=0,syBusy=false,syReady=null,syFail=null;
 try{SY=JSON.parse(localStorage.getItem('olu-sync')||'null')||SY}catch(e){}
 function sbOk(){return /^https:\/\/[^\s]+$/.test(SB_URL)&&SB_URL.indexOf('VOTRE')<0&&SB_KEY.indexOf('VOTRE')<0}
